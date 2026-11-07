@@ -17,6 +17,10 @@ virnba.zip ──► engine boots the game (BIOS once, then boot snapshot)
           vnba_game.dll  ◄── loaded by the engine (core/hw/sh4/aot/aot_module.cpp)
 ```
 
+Without a boot snapshot the builder runs the BIOS on Flycast's dynarec instead of the AOT executor (which has
+no blocks yet and would interpret everything); `compilePC` stops when the game entry point is first reached,
+saves the snapshot and runs the generation.
+
 `VNBA_GENERATE=<dir>` (with `VNBA_AOT=1`, `VNBA_AOT_DUMP`, `VNBA_AOT_STATIC`, `VNBA_AOT_STATIC_PTR=1`,
 `VNBA_AOT_STATIC_SZ1=1`) makes the engine run this generation and exit. `vnba/builder/build_game.ps1` drives it
 on Windows.

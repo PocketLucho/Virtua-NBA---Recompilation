@@ -162,10 +162,17 @@ bool RuntimeBlockInfo::Setup(u32 rpc,fpscr_t rfpu_cfg)
 	return true;
 }
 
+extern bool aot_dynarec_boot_watch;
+void aot_dynarec_entry_hook(u32 pc);
+
 //Called to compile code @pc
 static DynarecCodeEntryPtr compilePC(u32 blockcheck_failures)
 {
 	const u32 pc = Sh4cntx.pc;
+	// VNBA builder: BIOS boot on the dynarec, stop when the game entry point is first reached
+	// (every path to new code comes through here, with the guest state in memory)
+	if (unlikely(aot_dynarec_boot_watch) && (pc & 0x1FFFFFFF) == 0x0C020500)
+		aot_dynarec_entry_hook(pc);
 
 	if (codeBuffer.getFreeSpace() < 32_KB || pc == 0x8c0000e0 || pc == 0xac010000 || pc == 0xac008300)
 		Sh4Recompiler::Instance->ResetCache();
@@ -208,6 +215,7 @@ DynarecCodeEntryPtr DYNACALL rdv_FailedToFindBlock_pc()
 DynarecCodeEntryPtr DYNACALL rdv_FailedToFindBlock(u32 pc)
 {
 	//DEBUG_LOG(DYNAREC, "rdv_FailedToFindBlock %08x", pc);
+
 	Sh4cntx.pc=pc;
 	DynarecCodeEntryPtr code = compilePC(0);
 	if (code == NULL)

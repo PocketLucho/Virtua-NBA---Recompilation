@@ -608,22 +608,11 @@ private:
 				// whole machine state replaced: drop all block/page state
 				resetAotState();
 				aot_bios_read_watch = true;	// warn about BIOS reads outside the saved windows
-				if (const char *seeds = getenv("VNBA_AOT_STATIC"))
+				if (getenv("VNBA_AOT_STATIC") != nullptr)
 				{
 					// offline coverage generation: the program is in RAM now
-					void aot_static_generate(const char *seedFile);
-					aot_static_generate(seeds);
-					if (const char *outDir = getenv("VNBA_GENERATE"))
-					{
-						// builder: turn the dump into the game module sources
-						void aot_dump_close();
-						aot_dump_close();
-						bool aot_split_dump(const char *dumpPath, const char *outDir, int units);
-						bool ok = aot_split_dump(getenv("VNBA_AOT_DUMP"), outDir, 32);
-						fflush(stderr);
-						std::_Exit(ok ? 0 : 2);
-					}
-					exit(0);
+					void aot_run_generation();
+					aot_run_generation();
 				}
 			}
 			bootPending = aot_boot_pending();
@@ -855,6 +844,12 @@ private:
 bool aot_executor_enabled()
 {
 	static const bool enabled = [] {
+		// Builder without a boot snapshot: run the BIOS with Flycast's dynarec (much faster than
+		// the AOT executor's interpreter fallback with no blocks yet). The dynarec stops at the game
+		// entry point to save the snapshot and generate the code (see aot_dynarec_entry_hook).
+		bool aot_generate_with_dynarec();
+		if (aot_generate_with_dynarec())
+			return false;
 		const char *v = getenv("VNBA_AOT");
 		if (v != nullptr)
 			return v[0] != '0';

@@ -372,3 +372,38 @@ bool aot_bios_window(u32 addr)
 			return true;
 	return false;
 }
+
+// --- Builder without a boot snapshot: BIOS on the dynarec ---------------------------------
+bool aot_dynarec_boot_watch;
+
+bool aot_generate_with_dynarec()
+{
+	static const bool v = [] {
+		if (getenv("VNBA_GENERATE") == nullptr || getenv("VNBA_AOT_STATIC") == nullptr || getenv("VNBA_BIOS_BOOT") != nullptr)
+			return false;
+		std::string file;
+		if (const char *p = getenv("VNBA_BOOT_SNAPSHOT"))
+			file = p;
+		else
+		{
+			file = regionSnapshotPath(config::Region);
+			if (!validSnapshot(file) && regionIndex(config::Region) == 1)
+				file = get_writable_data_path("vnba_boot.state");
+		}
+		return !validSnapshot(file);
+	}();
+	aot_dynarec_boot_watch = v;
+	return v;
+}
+
+// Called by the dynarec when it first reaches the game entry point.
+void aot_dynarec_entry_hook(u32 pc)
+{
+	aot_dynarec_boot_watch = false;
+	Sh4cntx.pc = pc;
+	if (!aot_boot_hook(pc))
+		return;
+	NOTICE_LOG(BOOT, "VNBA: BIOS boot done on the dynarec, generating the game code");
+	void aot_run_generation();
+	aot_run_generation();
+}

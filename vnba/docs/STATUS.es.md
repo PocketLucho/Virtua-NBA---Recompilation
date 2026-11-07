@@ -24,6 +24,14 @@
 - **Build de Windows** por compilación cruzada (llvm-mingw, clang 21) del frontend standalone
   de Flycast con el AOT dentro.
 
+## Novedades (2026-11-07, noche)
+
+- **Primer arranque rápido en el constructor.** Sin instantánea, la BIOS se ejecutaba en el intérprete del
+  ejecutor AOT (aún no hay código recompilado) y era varias veces más lenta. Ahora el constructor arranca la BIOS
+  con el dynarec de Flycast; al compilar por primera vez el bloque del punto de entrada (0x0C020500, en
+  `compilePC`, con todo el estado en memoria) guarda la instantánea, genera el código y termina. En pruebas:
+  24 s → 12 s sin limitar la velocidad, y el código generado es idéntico byte a byte.
+
 ## Novedades (2026-11-07)
 
 - **Distribución legal: motor + constructor.** El .exe ya no lleva código del juego. Cada usuario ejecuta

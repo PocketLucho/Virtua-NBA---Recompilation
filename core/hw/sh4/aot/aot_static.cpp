@@ -265,3 +265,19 @@ bool aot_split_dump(const char *dumpPath, const char *outDir, int units)
 	fprintf(stderr, "AOT split: %zu blocks in %d units -> %s\n", items.size(), units, outDir);
 	return true;
 }
+
+// Builder: decode the program (now in RAM at the game entry point), write the game module
+// sources and exit.
+void aot_dump_close();
+void aot_run_generation()
+{
+	aot_static_generate(getenv("VNBA_AOT_STATIC"));
+	if (const char *outDir = getenv("VNBA_GENERATE"))
+	{
+		aot_dump_close();
+		bool ok = aot_split_dump(getenv("VNBA_AOT_DUMP"), outDir, 32);
+		fflush(stderr);
+		std::_Exit(ok ? 0 : 2);
+	}
+	exit(0);
+}
