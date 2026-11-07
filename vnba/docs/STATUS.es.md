@@ -1,6 +1,6 @@
 # Estado — Virtua NBA Recomp
 
-Última actualización: 2026-10-31
+Última actualización: 2026-11-07
 
 ## Funciona
 
@@ -23,6 +23,28 @@
     hash de la RAM en tiempo de guest; idéntica a Flycast en 360.000 timeslices.
 - **Build de Windows** por compilación cruzada (llvm-mingw, clang 21) del frontend standalone
   de Flycast con el AOT dentro.
+
+## Novedades (2026-11-07)
+
+- **Distribución legal: motor + constructor.** El .exe ya no lleva código del juego. Cada usuario ejecuta
+  `CONSTRUIR_JUEGO.bat`: descarga llvm-mingw (comprobado por SHA-256), el propio .exe arranca el juego hasta su
+  punto de entrada y vuelca todo el programa a C++ (76.057 bloques en ~2 s; `VNBA_GENERATE`), y se compila
+  `vnba_game.dll`. El motor la carga con `aot_module.cpp` y le pasa los servicios por `AotHostApi`
+  (`aot_dll_api.h`, `aot_dll_shim.cpp`). Validado en Linux con el .so: hash de RAM idéntico en todos los
+  fotogramas frente a la versión con los bloques enlazados. Gráficos, sonido y música nunca estuvieron en el
+  .exe: se leen de la ROM del usuario.
+- **Región**: selector Japón / EE. UU. / Exportación / Corea; una instantánea de arranque por región
+  (`vnba_boot_<jp|us|ex|kr>.state`). Japón cambia de verdad las pantallas de aviso y licencia.
+- **Trucos**: reloj de partido infinito (0x0C198068, en fotogramas) y reloj de posesión infinito (0x0C19E008).
+  El código "All-NBA team" (Start sobre Cleveland, Nueva York, Boston y Atlanta) se probó en la selección de
+  equipos y no aparece ningún equipo nuevo en esta versión arcade.
+- **Menú**: botón Reiniciar (vuelve a arrancar desde la instantánea), Salir a la izquierda.
+- **Idioma español** completo (705 textos de Flycast + los propios).
+- **FXAA** (DirectX 11 y OpenGL), además del supermuestreo de la resolución interna.
+- **Créditos**: enlace a https://buymeacoffee.com/pocket_lucho en Acerca de.
+- Documentación y comentarios en inglés (README.md, vnba/docs/TECHNICAL.md); repositorio en GitHub.
+- Descartado: ray tracing (el juego no describe la escena en 3D, envía triángulos ya proyectados al PowerVR) e
+  interpolación a más de 60 fps (la lógica va a 60 Hz; inventar fotogramas intermedios produciría artefactos).
 
 ## Novedades (2026-10-31, noche)
 
