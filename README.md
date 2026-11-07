@@ -1,6 +1,6 @@
 # VIRTUA NBA - RECOMP
 
-A static recompilation of **Virtua NBA** (Sega NAOMI, 2000) for Windows (Linux for development).
+A static recompilation of **Virtua NBA** (Sega NAOMI, 2000) for Windows and Linux.
 Made by **Pocket_lucho** with Claude. [Leer en español](README.es.md)
 
 The game's SH-4 machine code is translated ahead of time into C++ (one function per basic block)
@@ -14,7 +14,7 @@ If you want to support me: https://buymeacoffee.com/pocket_lucho
 * Your own **Virtua NBA** romset (`virnba.zip`, MAME naming).
 * The **NAOMI BIOS** (`naomi.zip`) — only for the first start, to create a boot snapshot. After that,
   the game boots straight to the SEGA logo without it.
-* Windows 10/11 x64.
+* Windows 10/11 x64, or Linux x86_64 (glibc 2.35+, e.g. Ubuntu 22.04 or newer).
 
 **No game code, graphics, sound or BIOS is included in this repository or in the releases.**
 The recompiled code is generated on your PC from your own ROM (see below).
@@ -44,6 +44,16 @@ The recompiled code is generated on your PC from your own ROM (see below).
 * Online play through Flycast's GGPO rollback netcode (experimental; both players need the same build,
   the same romset and the same widescreen setting).
 
+## Getting started (Linux x86_64)
+
+Download `VirtuaNBA-Recomp-linux-x64.tar.gz`, extract it, copy the ROM and BIOS as above, then run
+`./build_game.sh` once (needs `g++` and `make`: `sudo apt install build-essential`) and `./VirtuaNBA-Recompiled`.
+
+## Releases
+
+Pushing a tag `v*` runs `.github/workflows/release.yml`, which builds both packages
+(`vnba/tools/package_windows.sh`, `vnba/tools/package_linux.sh`) and publishes them as a GitHub release.
+
 ## Building from source
 
 ```bash
@@ -51,6 +61,8 @@ git clone --recursive https://github.com/PocketLucho/Virtua-NBA---Recompilation
 cd Virtua-NBA---Recompilation
 # Windows package (engine + builder), cross-compiled from Linux:
 LLVM_MINGW=/path/to/llvm-mingw-20251104-ucrt-ubuntu-22.04-x86_64 vnba/tools/package_windows.sh
+# Linux package (see the script header for the apt dependencies):
+vnba/tools/package_linux.sh
 ```
 
 Other targets:

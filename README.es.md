@@ -1,6 +1,6 @@
 # VIRTUA NBA - RECOMP
 
-Recompilación estática de **Virtua NBA** (Sega NAOMI, 2000) para Windows (y Linux para desarrollo).
+Recompilación estática de **Virtua NBA** (Sega NAOMI, 2000) para Windows y Linux.
 Hecho por **Pocket_lucho** con Claude. [Read in English](README.md)
 
 El código máquina SH-4 del juego se traduce por adelantado a C++ (una función por bloque) y se compila
@@ -14,7 +14,7 @@ Si quieres apoyarme: https://buymeacoffee.com/pocket_lucho
 * Tu propio romset de **Virtua NBA** (`virnba.zip`, nombre de MAME).
 * La **BIOS de NAOMI** (`naomi.zip`), sólo para el primer arranque (crea una instantánea; después
   arranca sin BIOS directamente en el logo de SEGA).
-* Windows 10/11 de 64 bits.
+* Windows 10/11 de 64 bits, o Linux x86_64 (glibc 2.35+, p. ej. Ubuntu 22.04 o posterior).
 
 **Ni este repositorio ni las versiones publicadas incluyen código, gráficos, sonido o BIOS del juego.**
 El código recompilado se genera en tu PC a partir de tu ROM.
@@ -30,6 +30,15 @@ El código recompilado se genera en tu PC a partir de tu ROM.
    * lo compila en `vnba_game.dll` (de 3 a 15 minutos según la CPU),
    * borra los fuentes generados.
 4. Ejecuta **`VirtuaNBA-Recompiled.exe`**. Tab o el menú abre las opciones.
+
+## Primeros pasos (Linux x86_64)
+
+Descarga `VirtuaNBA-Recomp-linux-x64.tar.gz`, descomprímelo, copia la ROM y la BIOS como arriba, ejecuta una vez
+`./build_game.sh` (necesita `g++` y `make`: `sudo apt install build-essential`) y después `./VirtuaNBA-Recompiled`.
+
+## Versiones
+
+Al subir una etiqueta `v*`, `.github/workflows/release.yml` compila los dos paquetes y los publica como release.
 
 ## Funciones
 

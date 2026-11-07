@@ -1,6 +1,8 @@
 #ifndef __STDC_FORMAT_MACROS
 #define __STDC_FORMAT_MACROS 1
 #endif
+#include <sys/stat.h>
+#include <climits>
 #include "types.h"
 
 #if defined(__unix__) || defined(__HAIKU__)
@@ -243,8 +245,22 @@ int main(int argc, char* argv[])
 	i18n::init();
 
 	// Set directories
+#ifdef VNBA_PRODUCT
+	{
+		// portable, like the Windows build: settings next to the executable, BIOS/snapshots in data/
+		char exe[PATH_MAX];
+		ssize_t n = readlink("/proc/self/exe", exe, sizeof(exe) - 1);
+		std::string dir = n > 0 ? std::string(exe, n) : std::string(argv[0]);
+		size_t slash = dir.find_last_of('/');
+		dir = slash == std::string::npos ? std::string("./") : dir.substr(0, slash + 1);
+		set_user_config_dir(dir);
+		mkdir((dir + "data").c_str(), 0755);
+		set_user_data_dir(dir + "data/");
+	}
+#else
 	set_user_config_dir(find_user_config_dir());
 	set_user_data_dir(find_user_data_dir());
+#endif
 	for (const auto& dir : find_system_config_dirs())
 		add_system_config_dir(dir);
 	for (const auto& dir : find_system_data_dirs())

@@ -8,6 +8,13 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT="${1:-$ROOT/dist}"
 BUILD="$ROOT/build-win-engine"
 : "${LLVM_MINGW:?set LLVM_MINGW to the llvm-mingw toolchain folder}"
+export LLVM_MINGW
+# Flycast includes some Windows headers with their MSVC capitalisation: add case aliases
+INC="$LLVM_MINGW/generic-w64-mingw32/include"
+for h in D3Dcompiler.h:d3dcompiler.h Commctrl.h:commctrl.h Windows.h:windows.h Shellapi.h:shellapi.h \
+	Psapi.h:psapi.h SDKDDKVer.h:sdkddkver.h TlHelp32.h:tlhelp32.h WinSock2.h:winsock2.h ShlObj.h:shlobj.h; do
+	[ -e "$INC/${h%%:*}" ] || ln -s "${h##*:}" "$INC/${h%%:*}"
+done
 
 cmake -S "$ROOT" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=Release \
 	-DCMAKE_TOOLCHAIN_FILE="$ROOT/vnba/tools/mingw-toolchain.cmake" \

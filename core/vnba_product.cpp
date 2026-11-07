@@ -70,8 +70,13 @@ bool vnba_product_init()
 	{
 		showError("Falta el código del juego (" VNBA_GAME_MODULE ").\n"
 			"Game code module (" VNBA_GAME_MODULE ") not found.\n\n"
+#ifdef _WIN32
 			"Ejecuta CONSTRUIR_JUEGO.bat (una sola vez) para generarlo a partir de tu ROM.\n"
 			"Run BUILD_GAME.bat once to build it from your own ROM.");
+#else
+			"Ejecuta ./build_game.sh (una sola vez) para generarlo a partir de tu ROM.\n"
+			"Run ./build_game.sh once to build it from your own ROM.");
+#endif
 		return false;
 	}
 	// The NAOMI BIOS is only needed the first time, to create the boot snapshot.
