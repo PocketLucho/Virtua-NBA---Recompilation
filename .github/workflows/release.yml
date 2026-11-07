@@ -6,6 +6,10 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag to create, e.g. v2026.11.07'
+        required: true
 
 permissions:
   contents: write
@@ -60,7 +64,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
         run: |
-          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then TAG="build-${GITHUB_RUN_NUMBER}"; fi
+          if [ "${GITHUB_REF_TYPE}" != "tag" ]; then TAG="${{ inputs.version }}"; fi
           cat > notes.md <<'NOTES'
           Engine + builder for Windows x64 and Linux x86_64. **No game code, ROM or BIOS included.**
 
@@ -73,4 +77,4 @@ jobs:
           If you want to support me: https://buymeacoffee.com/pocket_lucho
           NOTES
           gh release create "$TAG" out/windows/VirtuaNBA-Recomp-win64.zip out/linux/VirtuaNBA-Recomp-linux-x64.tar.gz \
-            --repo "$GITHUB_REPOSITORY" --title "VIRTUA NBA - RECOMP $TAG" --notes-file notes.md
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --title "VIRTUA NBA - RECOMP $TAG" --notes-file notes.md
