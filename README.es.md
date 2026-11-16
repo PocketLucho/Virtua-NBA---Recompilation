@@ -14,7 +14,7 @@ Si quieres apoyarme: https://buymeacoffee.com/pocket_lucho
 * Tu propio romset de **Virtua NBA** (`virnba.zip`, nombre de MAME).
 * La **BIOS de NAOMI** (`naomi.zip`), sólo para el primer arranque (crea una instantánea; después
   arranca sin BIOS directamente en el logo de SEGA).
-* Windows 10/11 de 64 bits, o Linux x86_64 (glibc 2.35+, p. ej. Ubuntu 22.04 o posterior).
+* Windows 10/11 de 64 bits, o Linux x86_64 (glibc 2.35+: SteamOS 3, Ubuntu 22.04 o posterior, Fedora, Arch...).
 
 **Ni este repositorio ni las versiones publicadas incluyen código, gráficos, sonido o BIOS del juego.**
 El código recompilado se genera en tu PC a partir de tu ROM.
@@ -31,10 +31,12 @@ El código recompilado se genera en tu PC a partir de tu ROM.
    * borra los fuentes generados.
 4. Ejecuta **`VirtuaNBA-Recompiled.exe`**. Tab o el menú abre las opciones.
 
-## Primeros pasos (Linux x86_64)
+## Primeros pasos (Linux x86_64 / SteamOS)
 
 Descarga `VirtuaNBA-Recomp-linux-x64.tar.gz`, descomprímelo, copia la ROM y la BIOS como arriba, ejecuta una vez
-`./build_game.sh` (necesita `g++` y `make`: `sudo apt install build-essential`) y después `./VirtuaNBA-Recompiled`.
+`./build_game.sh` y juega con `./VirtuaNBA.sh`. No hay que instalar nada: si no hay compilador de C++ (SteamOS),
+el constructor descarga uno portátil (Zig) en su propia carpeta. En SteamOS hazlo en el Modo Escritorio y después
+añade `VirtuaNBA.sh` a Steam como juego que no es de Steam. Más detalles en `LEEME-linux.txt` dentro del paquete.
 
 ## Versiones
 

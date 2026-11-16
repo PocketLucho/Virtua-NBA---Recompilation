@@ -14,7 +14,7 @@ If you want to support me: https://buymeacoffee.com/pocket_lucho
 * Your own **Virtua NBA** romset (`virnba.zip`, MAME naming).
 * The **NAOMI BIOS** (`naomi.zip`) — only for the first start, to create a boot snapshot. After that,
   the game boots straight to the SEGA logo without it.
-* Windows 10/11 x64, or Linux x86_64 (glibc 2.35+, e.g. Ubuntu 22.04 or newer).
+* Windows 10/11 x64, or Linux x86_64 (glibc 2.35+: SteamOS 3, Ubuntu 22.04 or newer, Fedora, Arch...).
 
 **No game code, graphics, sound or BIOS is included in this repository or in the releases.**
 The recompiled code is generated on your PC from your own ROM (see below).
@@ -44,10 +44,12 @@ The recompiled code is generated on your PC from your own ROM (see below).
 * Online play through Flycast's GGPO rollback netcode (experimental; both players need the same build,
   the same romset and the same widescreen setting).
 
-## Getting started (Linux x86_64)
+## Getting started (Linux x86_64 / SteamOS)
 
 Download `VirtuaNBA-Recomp-linux-x64.tar.gz`, extract it, copy the ROM and BIOS as above, then run
-`./build_game.sh` once (needs `g++` and `make`: `sudo apt install build-essential`) and `./VirtuaNBA-Recompiled`.
+`./build_game.sh` once and play with `./VirtuaNBA.sh`. Nothing needs to be installed: if there is no C++
+compiler (SteamOS), the builder downloads a portable one (Zig) into its own folder. On SteamOS do this in
+Desktop Mode, then add `VirtuaNBA.sh` to Steam as a non-Steam game. See `README-linux.txt` in the package.
 
 ## Releases
 

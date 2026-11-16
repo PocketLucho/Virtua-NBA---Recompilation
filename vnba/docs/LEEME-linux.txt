@@ -1,17 +1,34 @@
-VIRTUA NBA - RECOMP para Linux x86_64  (Hecho por Pocket_lucho con Claude)
-=========================================================================
+VIRTUA NBA - RECOMP para Linux x86_64 y SteamOS  (Hecho por Pocket_lucho con Claude)
+====================================================================================
 
 Si quieres apoyarme: https://buymeacoffee.com/pocket_lucho
 
-REQUISITOS: SDL2, libcurl, PulseAudio/ALSA (vienen en cualquier escritorio), y para
-construir el juego: g++ y make   ->   sudo apt install build-essential libsdl2-2.0-0
+REQUISITOS: ninguno que instalar. Funciona en SteamOS (Steam Deck, Legion Go S...), Ubuntu,
+Fedora, Arch, etc. Si el sistema no tiene compilador de C++, build_game.sh descarga uno
+portátil (Zig, ~45 MB) la primera vez, dentro de esta carpeta. No hace falta sudo.
+Sólo hace falta conexión a internet la primera vez si no tienes g++.
 
 INSTALACIÓN
 1. Copia tu romset virnba.zip en la carpeta "roms".
 2. Copia la BIOS naomi.zip en la carpeta "data" (sólo hace falta la primera vez).
-3. Ejecuta UNA vez:   ./build_game.sh
+3. Abre una terminal en esta carpeta y ejecuta UNA vez:   ./build_game.sh
    Genera el código del juego a partir de TU ROM y lo compila en libvnba_game.so.
-4. Ejecuta:   ./VirtuaNBA-Recompiled
+4. Para jugar ejecuta:   ./VirtuaNBA.sh
+   (si falla, el motivo se muestra en una ventana y queda en vnba.log)
+
+STEAMOS (Steam Deck / Legion Go S)
+1. Pasa al Modo Escritorio (botón Steam > Apagar > Cambiar a escritorio).
+2. Descomprime el .tar.gz (por ejemplo en ~/Games/VirtuaNBA-Recomp) y copia la ROM y la BIOS.
+3. En el gestor de archivos (Dolphin), dentro de la carpeta: clic derecho >
+   "Abrir terminal aquí" y escribe:
+       chmod +x build_game.sh VirtuaNBA.sh VirtuaNBA-Recompiled
+       ./build_game.sh
+4. Prueba el juego con ./VirtuaNBA.sh
+5. Para jugar en Modo Juego: abre Steam en el escritorio > "Añadir un juego" >
+   "Añadir un juego que no es de Steam" > Examinar > elige VirtuaNBA.sh (cambia el filtro
+   a "Todos los archivos"). Vuelve al Modo Juego y aparecerá en tu biblioteca.
+   El mando funciona directamente; el menú de configuración se abre con la tecla Tab
+   o con el botón asignado en las opciones de controles.
 
 Este paquete no contiene nada del juego. libvnba_game.so y data/vnba_boot_*.state se
 generan con tus archivos: no los compartas. Licencia GPL v2 (basado en Flycast).
