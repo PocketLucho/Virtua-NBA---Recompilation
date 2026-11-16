@@ -61,7 +61,7 @@ jobs:
         with:
           name: linux
       - name: Runtime libraries only (what SteamOS ships)
-        run: pacman -Sy --noconfirm --needed libpulse alsa-lib libglvnd systemd-libs zlib zstd libpng xz tar curl
+        run: pacman -Syu --noconfirm --needed libpulse alsa-lib libglvnd systemd-libs zlib zstd libpng xz tar curl
       - name: Engine libraries resolve
         run: |
           tar -xzf VirtuaNBA-Recomp-linux-x64.tar.gz
