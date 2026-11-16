@@ -35,7 +35,8 @@ fi
 
 ./VirtuaNBA-Recompiled "$@" 2> >(tee vnba.log >&2)
 rc=$?
-if [ $rc -ne 0 ] && [ $rc -lt 128 ]; then
+# 130/137/143 = closed by the user or the system (Ctrl+C, kill): no message
+if [ $rc -ne 0 ] && [ $rc -ne 130 ] && [ $rc -ne 137 ] && [ $rc -ne 143 ]; then
 	message "VIRTUA NBA - RECOMP" "El juego se ha cerrado con un error ($rc). / The game exited with an error ($rc).
 
 $(tail -n 15 vnba.log)"
