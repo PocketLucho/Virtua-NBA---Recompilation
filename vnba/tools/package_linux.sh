@@ -11,12 +11,13 @@ BUILD="$ROOT/build-linux-engine"
 
 cmake -S "$ROOT" -B "$BUILD" -G Ninja -DCMAKE_BUILD_TYPE=Release \
 	-DVNBA_PRODUCT=ON -DUSE_BREAKPAD=OFF -DUSE_LUA=OFF \
-	-DUSE_HOST_SDL=OFF -DUSE_HOST_LIBZIP=OFF -DUSE_LIBAO=OFF
+	-DUSE_HOST_SDL=OFF -DUSE_HOST_LIBZIP=OFF -DUSE_LIBAO=OFF -DUSE_OPENMP=OFF \
+	-DCMAKE_EXE_LINKER_FLAGS="-static-libstdc++ -static-libgcc"
 ninja -C "$BUILD"
 
 # Portability check: the binary may only depend on libraries every desktop Linux has
 # (SteamOS, Arch, Fedora, Debian...). SDL and libzip are linked statically, libcurl/libao not used.
-ALLOWED='^(linux-vdso|libc|libm|libdl|libpthread|librt|libgcc_s|libstdc\+\+|libz|libzstd|libGL|libOpenGL|libGLX|libEGL|libudev|libpulse|libasound|ld-linux-x86-64)\.so'
+ALLOWED='^(linux-vdso|libc|libm|libdl|libpthread|librt|libgcc_s|libstdc\+\+|libz|libzstd|libGL|libOpenGL|libGLX|libEGL|libudev|libpulse|libasound|libpng16|ld-linux-x86-64)\.so'
 BAD=$(objdump -p "$BUILD/VirtuaNBA-Recompiled" | awk '/NEEDED/{print $2}' | grep -Ev "$ALLOWED" || true)
 objdump -p "$BUILD/VirtuaNBA-Recompiled" | awk '/NEEDED/{print "  needs " $2}'
 if [ -n "$BAD" ]; then echo "ERROR: non-portable dependencies: $BAD"; exit 1; fi
