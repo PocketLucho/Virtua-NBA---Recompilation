@@ -8,6 +8,8 @@
 #include "oslib/oslib.h"
 #include "hw/sh4/aot/aot_boot.h"
 #include "hw/sh4/aot/aot_dll_api.h"
+#include "cfg/cfg.h"
+#include "cfg/option.h"
 #include <nowide/cstdio.hpp>
 #include <string>
 #include <vector>
@@ -38,9 +40,33 @@ void showError(const std::string& msg)
 
 } // namespace
 
+// Virtua NBA draws its floor reflections (players, photographers) under a translucent floor and
+// relies on the PowerVR sorting translucent polygons per pixel. Flycast's default per-triangle
+// sorting draws some reflections on top of the floor (opaque upside-down photographers along the
+// baselines). Switch once to the per-pixel variant of the selected renderer; the user can still
+// change it afterwards in Video > Transparent Sorting.
+static void defaultToPerPixelSorting()
+{
+	if (config::loadBool("vnba", "PerPixelSortingSet", false))
+		return;
+	switch ((RenderType)config::RendererType)
+	{
+	case RenderType::OpenGL: config::RendererType = RenderType::OpenGL_OIT; break;
+	case RenderType::Vulkan: config::RendererType = RenderType::Vulkan_OIT; break;
+	case RenderType::DirectX11: config::RendererType = RenderType::DirectX11_OIT; break;
+	default: break;
+	}
+	if (config::PerPixelLayers < 64)	// the crowd stacks many layers: 32 drops pixels
+		config::PerPixelLayers = 64;
+	config::saveBool("vnba", "PerPixelSortingSet", true);
+	config::Settings::instance().save();
+	NOTICE_LOG(BOOT, "VNBA: per-pixel transparent sorting enabled by default");
+}
+
 // Returns false if the game cannot start (the caller should exit).
 bool vnba_product_init()
 {
+	defaultToPerPixelSorting();
 	if (settings.content.path.empty())
 	{
 		const std::vector<std::string> candidates = {

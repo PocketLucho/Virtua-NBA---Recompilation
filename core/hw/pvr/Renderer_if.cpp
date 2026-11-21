@@ -465,6 +465,19 @@ bool rend_init_renderer()
 	if (renderer == nullptr)
 		rend_create_renderer();
 	bool success = renderer != nullptr && renderer->Init();
+	if (!success && (config::RendererType == RenderType::OpenGL_OIT || config::RendererType == RenderType::Vulkan_OIT
+			|| config::RendererType == RenderType::DirectX11_OIT))
+	{
+		// The per-pixel renderer needs a more recent GPU/driver (OpenGL 4.3, D3D 11.0 with UAVs...):
+		// fall back to the per-triangle variant of the same API instead of showing nothing.
+		WARN_LOG(RENDERER, "Per-pixel renderer failed to initialize, using the per-triangle one");
+		delete renderer;
+		renderer = nullptr;
+		config::RendererType = config::RendererType == RenderType::OpenGL_OIT ? RenderType::OpenGL
+				: config::RendererType == RenderType::Vulkan_OIT ? RenderType::Vulkan : RenderType::DirectX11;
+		rend_create_renderer();
+		success = renderer != nullptr && renderer->Init();
+	}
 	if (!success) {
 		delete renderer;
 		renderer = rend_norend();
